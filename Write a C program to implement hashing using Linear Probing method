@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define TABLE_SIZE 10
+struct HashTable {
+    int keys[TABLE_SIZE];
+    int values[TABLE_SIZE];
+};
+void initialize(struct HashTable* hashTable) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        hashTable->keys[i] = -1;
+        hashTable->values[i] = -1;
+    }
+}
+int hash(int key) {
+    return key % TABLE_SIZE;
+}
+void insert(struct HashTable* hashTable, int key, int value) {
+    int index = hash(key);
+    while (hashTable->keys[index] != -1) {
+        index = (index + 1) % TABLE_SIZE;
+    }
+    hashTable->keys[index] = key;
+    hashTable->values[index] = value;
+}
+int search(struct HashTable* hashTable, int key) {
+    int index = hash(key);
+    while (hashTable->keys[index] != -1) {
+        if (hashTable->keys[index] == key) {
+            return hashTable->values[index];
+        }
+        index = (index + 1) % TABLE_SIZE;
+    }
+    return -1; // Key not found
+}
+int main() {
+    struct HashTable hashTable;
+    initialize(&hashTable);
+    insert(&hashTable, 12, 100);
+    insert(&hashTable, 22, 200);
+    insert(&hashTable, 32, 300);
+    insert(&hashTable, 42, 400);
+    printf("Value for key 12: %d\n", search(&hashTable, 12));
+    printf("Value for key 22: %d\n", search(&hashTable, 22));
+    printf("Value for key 32: %d\n", search(&hashTable, 32));
+    printf("Value for key 42: %d\n", search(&hashTable, 42));
+    printf("Value for key 52: %d\n", search(&hashTable, 52));
+    return 0;
+}
